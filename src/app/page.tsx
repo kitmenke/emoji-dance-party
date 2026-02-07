@@ -9,6 +9,7 @@ export default function Home() {
   const [lastTapTime, setLastTapTime] = useState<number | null>(null);
   const [bananaCount, setBananaCount] = useState(1);
   const [selectedEmoji, setSelectedEmoji] = useState("🍌");
+  const [showTip, setShowTip] = useState(true);
 
   const emojiOptions = [
     "🍌", "🍎", "🍊", "🍋", "🍇", "🍓", "🍑", "🍒", "🥑", "🥕", "🌽", "🥦", "🍆", "🌶️", "🥒", "🍅"
@@ -115,6 +116,22 @@ export default function Home() {
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-zinc-950 via-purple-950/20 to-zinc-950 overflow-hidden">
       {/* Background Glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(250,204,21,0.08),transparent_50%)]" />
+      
+      {/* Tip Banner */}
+      {showTip && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-4 rounded-full bg-yellow-400/10 border border-yellow-400/20 px-6 py-3 backdrop-blur-sm">
+          <span className="text-sm text-yellow-200">
+            🎵 Put on a good song and tap <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-yellow-100 font-mono text-xs">space</kbd> to the beat. Change dancers with the arrow keys.
+          </span>
+          <button
+            onClick={() => setShowTip(false)}
+            className="text-yellow-400/60 hover:text-yellow-200 transition-colors text-lg leading-none"
+            aria-label="Dismiss tip"
+          >
+            ×
+          </button>
+        </div>
+      )}
       
       {/* Header */}
       <header className="absolute top-8 left-8 z-20">
