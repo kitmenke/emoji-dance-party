@@ -164,9 +164,9 @@ export default function Home() {
       <div className="relative z-10 flex flex-col items-center gap-12">
         {/* Dancing Emojis */}
         {bananaCount <= 5 ? (
-          <div key={`${bananaCount}-${selectedEmoji}`} className="flex flex-wrap items-center justify-center gap-4">
+          <div key={`${bananaCount}-${selectedEmoji}`} className="flex flex-wrap items-center justify-center gap-2 md:gap-4">
             {Array.from({ length: bananaCount }).map((_, i) => (
-              <DancingBanana key={i} bpm={bpm} emoji={selectedEmoji} />
+              <DancingBanana key={i} bpm={bpm} emoji={selectedEmoji} size={100} />
             ))}
           </div>
         ) : (
@@ -177,7 +177,8 @@ export default function Home() {
               const goldenRatio = 0.618033988749;
               const x = ((i * goldenRatio * 100) % 80) + 10; // 10-90% from left
               const y = (((i * 1337 + 42) * 13) % 60) + 20; // 20-80% from top  
-              const size = 80 + (((i * 2749 + 17) * 3) % 120); // 80-200px
+              // Smaller sizes that work on mobile (40-100px)
+              const size = 40 + (((i * 2749 + 17) * 3) % 60);
               return (
                 <div
                   key={i}
@@ -196,7 +197,7 @@ export default function Home() {
         )}
 
         {/* BPM Display */}
-        <div className="text-center">
+        <div className="text-center relative z-20">
           <div className="text-8xl font-black tracking-tighter text-white tabular-nums">
             {bpm || "—"}
           </div>
@@ -206,7 +207,7 @@ export default function Home() {
         </div>
 
         {/* Tap Indicator */}
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 relative z-20">
           <button
             onClick={handleTap}
             className="group relative px-12 py-4 rounded-full bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-sm transition-all hover:bg-white/10 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-yellow-400/50"
