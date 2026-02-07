@@ -8,6 +8,11 @@ export default function VeggieDancePage() {
   const [taps, setTaps] = useState<number[]>([]);
   const [lastTapTime, setLastTapTime] = useState<number | null>(null);
   const [bananaCount, setBananaCount] = useState(1);
+  const [selectedEmoji, setSelectedEmoji] = useState("🍌");
+
+  const emojiOptions = [
+    "🍌", "🍎", "🍊", "🍋", "🍇", "🍓", "🍑", "🍒", "🥑", "🥕", "🌽", "🥦", "🍆", "🌶️", "🥒", "🍅"
+  ];
 
   const calculateBpm = useCallback((tapTimestamps: number[]) => {
     if (tapTimestamps.length < 2) return 0;
@@ -58,6 +63,26 @@ export default function VeggieDancePage() {
     setBananaCount((prev) => prev + 2);
   }, []);
 
+  const handleRemoveBananas = useCallback(() => {
+    setBananaCount((prev) => Math.max(1, prev - 2));
+  }, []);
+
+  const handleNextEmoji = useCallback(() => {
+    setSelectedEmoji((prev) => {
+      const currentIndex = emojiOptions.indexOf(prev);
+      const nextIndex = (currentIndex + 1) % emojiOptions.length;
+      return emojiOptions[nextIndex];
+    });
+  }, [emojiOptions]);
+
+  const handlePrevEmoji = useCallback(() => {
+    setSelectedEmoji((prev) => {
+      const currentIndex = emojiOptions.indexOf(prev);
+      const prevIndex = (currentIndex - 1 + emojiOptions.length) % emojiOptions.length;
+      return emojiOptions[prevIndex];
+    });
+  }, [emojiOptions]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === "Space" && !e.repeat) {
@@ -68,11 +93,23 @@ export default function VeggieDancePage() {
         e.preventDefault();
         handleAddBananas();
       }
+      if (e.code === "ArrowDown" && !e.repeat) {
+        e.preventDefault();
+        handleRemoveBananas();
+      }
+      if (e.code === "ArrowRight" && !e.repeat) {
+        e.preventDefault();
+        handleNextEmoji();
+      }
+      if (e.code === "ArrowLeft" && !e.repeat) {
+        e.preventDefault();
+        handlePrevEmoji();
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleTap, handleAddBananas]);
+  }, [handleTap, handleAddBananas, handleRemoveBananas, handleNextEmoji, handlePrevEmoji]);
 
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-zinc-950 via-purple-950/20 to-zinc-950 overflow-hidden">
@@ -90,14 +127,31 @@ export default function VeggieDancePage() {
         <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">
           BPM Rhythm Visualizer
         </p>
+        
+        {/* Emoji Picker */}
+        <div className="mt-4 flex flex-wrap gap-2 max-w-xs">
+          {emojiOptions.map((emoji) => (
+            <button
+              key={emoji}
+              onClick={() => setSelectedEmoji(emoji)}
+              className={`text-2xl p-1 rounded-lg transition-all hover:scale-125 ${
+                selectedEmoji === emoji 
+                  ? "bg-white/20 ring-2 ring-yellow-400" 
+                  : "hover:bg-white/10"
+              }`}
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
       </header>
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center gap-12">
-        {/* Dancing Bananas */}
-        <div key={bananaCount} className="flex flex-wrap items-center justify-center gap-4">
+        {/* Dancing Emojis */}
+        <div key={`${bananaCount}-${selectedEmoji}`} className="flex flex-wrap items-center justify-center gap-4">
           {Array.from({ length: bananaCount }).map((_, i) => (
-            <DancingBanana key={i} bpm={bpm} />
+            <DancingBanana key={i} bpm={bpm} emoji={selectedEmoji} />
           ))}
         </div>
 
@@ -140,9 +194,11 @@ export default function VeggieDancePage() {
       {/* Instructions */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
         <p className="text-[10px] text-zinc-600 font-medium uppercase tracking-widest">
-          Press <kbd className="px-2 py-1 rounded bg-white/5 border border-white/10 text-zinc-400 mx-1">SPACE</kbd> to the beat
+          <kbd className="px-2 py-1 rounded bg-white/5 border border-white/10 text-zinc-400 mx-1">SPACE</kbd> tap beat
           <span className="mx-2">•</span>
-          <kbd className="px-2 py-1 rounded bg-white/5 border border-white/10 text-zinc-400 mx-1">↑</kbd> for more bananas
+          <kbd className="px-2 py-1 rounded bg-white/5 border border-white/10 text-zinc-400 mx-1">↑↓</kbd> add/remove
+          <span className="mx-2">•</span>
+          <kbd className="px-2 py-1 rounded bg-white/5 border border-white/10 text-zinc-400 mx-1">←→</kbd> change emoji
         </p>
       </div>
     </div>
