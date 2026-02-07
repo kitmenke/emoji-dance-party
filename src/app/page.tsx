@@ -231,14 +231,50 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Instructions */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
-        <p className="text-[10px] text-zinc-600 font-medium uppercase tracking-widest">
-          <kbd className="px-2 py-1 rounded bg-white/5 border border-white/10 text-zinc-400 mx-1">SPACE</kbd> tap beat
-          <span className="mx-2">•</span>
-          <kbd className="px-2 py-1 rounded bg-white/5 border border-white/10 text-zinc-400 mx-1">↑↓</kbd> add/remove
-          <span className="mx-2">•</span>
-          <kbd className="px-2 py-1 rounded bg-white/5 border border-white/10 text-zinc-400 mx-1">←→</kbd> change emoji
+      {/* Mobile Controls */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
+        {/* Arrow Controls */}
+        <div className="flex items-center gap-2">
+          {/* Left Arrow - Previous Emoji */}
+          <button
+            onClick={handlePrevEmoji}
+            className="w-12 h-12 rounded-full bg-white/5 border border-white/10 text-white text-xl flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all"
+            aria-label="Previous emoji"
+          >
+            ←
+          </button>
+          
+          {/* Up/Down Arrows */}
+          <div className="flex flex-col gap-1">
+            <button
+              onClick={handleAddBananas}
+              className="w-12 h-8 rounded-lg bg-white/5 border border-white/10 text-white text-sm flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all"
+              aria-label="Add dancers"
+            >
+              ↑
+            </button>
+            <button
+              onClick={handleRemoveBananas}
+              className="w-12 h-8 rounded-lg bg-white/5 border border-white/10 text-white text-sm flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all"
+              aria-label="Remove dancers"
+            >
+              ↓
+            </button>
+          </div>
+          
+          {/* Right Arrow - Next Emoji */}
+          <button
+            onClick={handleNextEmoji}
+            className="w-12 h-12 rounded-full bg-white/5 border border-white/10 text-white text-xl flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all"
+            aria-label="Next emoji"
+          >
+            →
+          </button>
+        </div>
+        
+        {/* Keyboard hint for desktop */}
+        <p className="text-[10px] text-zinc-600 font-medium uppercase tracking-widest hidden md:block">
+          Or use <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-zinc-400">SPACE</kbd> and arrow keys
         </p>
       </div>
     </div>
