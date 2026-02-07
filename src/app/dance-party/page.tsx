@@ -149,11 +149,37 @@ export default function VeggieDancePage() {
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center gap-12">
         {/* Dancing Emojis */}
-        <div key={`${bananaCount}-${selectedEmoji}`} className="flex flex-wrap items-center justify-center gap-4">
-          {Array.from({ length: bananaCount }).map((_, i) => (
-            <DancingBanana key={i} bpm={bpm} emoji={selectedEmoji} />
-          ))}
-        </div>
+        {bananaCount <= 5 ? (
+          <div key={`${bananaCount}-${selectedEmoji}`} className="flex flex-wrap items-center justify-center gap-4">
+            {Array.from({ length: bananaCount }).map((_, i) => (
+              <DancingBanana key={i} bpm={bpm} emoji={selectedEmoji} />
+            ))}
+          </div>
+        ) : (
+          <div key={`${bananaCount}-${selectedEmoji}`} className="fixed inset-0 pointer-events-none">
+            {Array.from({ length: bananaCount }).map((_, i) => {
+              // Seeded pseudo-random positions and sizes based on index
+              // Using different primes and golden ratio for better distribution
+              const goldenRatio = 0.618033988749;
+              const x = ((i * goldenRatio * 100) % 80) + 10; // 10-90% from left
+              const y = (((i * 1337 + 42) * 13) % 60) + 20; // 20-80% from top  
+              const size = 80 + (((i * 2749 + 17) * 3) % 120); // 80-200px
+              return (
+                <div
+                  key={i}
+                  className="absolute"
+                  style={{
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <DancingBanana bpm={bpm} emoji={selectedEmoji} size={size} />
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* BPM Display */}
         <div className="text-center">
